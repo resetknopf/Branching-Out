@@ -1,4 +1,6 @@
 import json
+import re
+
 
 def filter_users_by_age(age):
     with open("users.json", "r") as file:
@@ -9,6 +11,7 @@ def filter_users_by_age(age):
     for user in filtered_users:
         print(user)
 
+
 def filter_users_by_name(name):
     with open("users.json", "r") as file:
         users = json.load(file)
@@ -17,6 +20,22 @@ def filter_users_by_name(name):
 
     for user in filtered_users:
         print(user)
+
+
+def filter_users_by_email(email):
+    with open("users.json", "r") as file:
+        users = json.load(file)
+
+    filtered_users = [user for user in users if user["email"].lower() == email.lower()]
+
+    for user in filtered_users:
+        print(user)
+
+
+def is_valid_email(email):
+    pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
+    return re.match(pattern, email) is not None
+
 
 if __name__ == "__main__":
     filter_option = input(
@@ -34,6 +53,14 @@ if __name__ == "__main__":
                 break
             except ValueError:
                 print("Please enter a valid number.")
-    else:
-        print("Filtering by that option is not yet supported.")
+    elif filter_option == "email":
+        while True:
+            email_to_search = input("Enter an email to filter users: ").strip()
+            if is_valid_email(email_to_search):
+                filter_users_by_email(email_to_search)
+                break
+            else:
+                print("Please enter a valid email address.")
 
+else:
+    print("Filtering by that option is not yet supported.")
